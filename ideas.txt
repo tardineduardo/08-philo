@@ -1,0 +1,7 @@
+1) parse fdf map with threads.
+
+2) calculate push swap costs with threads.
+
+3) draw v and h lines in different threads.
+
+*** Why smaller iterations cause no race issues?
