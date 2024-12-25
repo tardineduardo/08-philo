@@ -1,0 +1,17 @@
+memset					ok
+printf					ok *
+write					ok *
+malloc					ok
+free					ok
+usleep					ok
+gettimeofday			ok
+pthread_create			ok
+pthread_detach			-
+pthread_join			ok
+pthread_mutex_init		ok
+pthread_mutex_destroy	-
+pthread_mutex_lock		ok
+pthread_mutex_unlock	ok
+
+* já sei que vai dar problema misturar printf com write.
+
