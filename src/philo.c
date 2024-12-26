@@ -12,13 +12,16 @@
 
 #include "philo.h"
 
-void	eat(void)
+
+
+void	eat(t_resources *r)
 {
 
 }
 
-void	sleep(void)
+void	thsleep(t_resources *r)
 {
+
 
 }
 
@@ -29,44 +32,48 @@ void	think(void)
 
 
 
-void	ft_philosopher(void *args)
+void	*ft_philosopher(void *args)
 {
 	t_philo	*data;
 
 	data = (t_philo *)args;
-	printf("Hello from philosopher %i.\n", data->r->philo->index);
+	printf("Hello from philosopher %li.\n", data->index);
+
+
+
 
 }
 
 int	main(int argc, char *argv[])
 {
-	int			i;
-	t_resources	*r;
+	size_t			i;
+	t_resources		*r;
 
-	//ft_validate_args(argc, argv);
 	r = malloc(sizeof(t_resources));
+	if (!r)
+	{
+		printf("malloc errorxxxx.\n");
+		ft_free_resources(r);
+		exit (1);
+	}
+	ft_validate_args(argc, argv, r);
+	ft_alloc_resources(r);
 	
-	//create separate funtion to init all this.
-	r->mutex = malloc(ft_atoi(argv[1]) * sizeof(pthread_mutex_t));
-	r->th = malloc(ft_atoi(argv[1]) * sizeof(pthread_t));
-	r->philo = malloc(ft_atoi(argv[1]) * sizeof(t_philo));
-	r->timers = malloc(ft_atoi(argv[1]) * sizeof(t_timers));
-	r->chrono = malloc(sizeof(t_chrono));
-
 	i = 0;
-	while (i < argv[1])
+	while (i < r->params->nphilos)
 	{
-		r->philo->index = i + 0;
+		r->philo[i].index = i;
 		r->philo->r = r;
-		pthread_create(r->th[i], NULL, ft_philosopher, (void *)&r->philo[i]);
+		pthread_create(&r->th[i], NULL, &ft_philosopher, (void *)&r->philo[i]);
 		i++;
 	}
-	i = 0;
-	while (i < argv[1])
+	int j = 0;
+
+	while (j < atoi(argv[1]))
 	{
-		pthread_join(r->th[i], NULL);
-		i++;
+		pthread_join(r->th[j], NULL);
+		j++;
 	}
-	gettimeofday(r->chrono, NULL);
-	printf("sec = %li, usec = %li\n", r->chrono->tv_sec, r->chrono->tv_usec);
+
+	ft_free_resources(r);
 }
