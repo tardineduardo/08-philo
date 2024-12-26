@@ -13,5 +13,5 @@ pthread_mutex_destroy	-
 pthread_mutex_lock		ok
 pthread_mutex_unlock	ok
 
-* já sei que vai dar problema misturar printf com write.
-
+* já sei que vai dar problema misturar printf com write:
+"A displayed state message should not be mixed up with another message."

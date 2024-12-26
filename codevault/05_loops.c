@@ -5,7 +5,7 @@
 int mails = 0;
 pthread_mutex_t mutex;
 
-void* routine() {
+void	*routine() {
     for (int i = 0; i < 10000000; i++) {
         pthread_mutex_lock(&mutex);
         mails++;
@@ -13,7 +13,7 @@ void* routine() {
     }
 }
 
-int main(int argc, char* argv[]) {
+int	main(int argc, char* argv[]) {
     pthread_t th[8];
     int i;
     pthread_mutex_init(&mutex, NULL);
@@ -32,5 +32,5 @@ int main(int argc, char* argv[]) {
     }
     pthread_mutex_destroy(&mutex);
     printf("Number of mails: %d\n", mails);
-    return 0;
+    return (0);
 }

@@ -6,7 +6,8 @@ OBJS_SRC =	$(MAIN:.c=.o)
 
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -g
+#CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -g
 
 NAME = philo
 
