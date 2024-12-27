@@ -66,7 +66,7 @@ void	ft_free_resources(t_resources *r)
 		return ;
 	if (r->th[0])
 	{
-		pthread_mutex_lock(r->stop);
+		pthread_mutex_lock(r->stop); ////////////////// Complete this!!!!!!!
 		r->params->stop = true;
 		pthread_mutex_unlock(r->stop);
 	}
