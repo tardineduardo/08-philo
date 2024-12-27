@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 18:39:36 by eduribei          #+#    #+#             */
-/*   Updated: 2024/12/25 22:04:25 by eduribei         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:29:57 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,11 @@ void	ft_alloc_resources(t_resources *r)
 }
 
 
-void	ft_free_resources(t_resources *r)
-{
-
-
-
-
-}
-
+// FREE RESOURCES WHEN ONLY WHEN THREADS RETURN.
 void	ft_free_resources(t_resources *r)
 {
 	if (!r)
 		return ;
-	if (r->th[0])
-	{
-		pthread_mutex_lock(r->stop); ////////////////// Complete this!!!!!!!
-		r->params->stop = true;
-		pthread_mutex_unlock(r->stop);
-	}
 	if (r->th)
 		free(r->th);
 	if (r->forks)
@@ -82,6 +69,15 @@ void	ft_free_resources(t_resources *r)
 		free(r->params);
 	free(r);
 	return ;
+}
+//1 - STOP ALL THREADS
+void	ft_stop_all_threads(t_resources *r)
+{
+	if (!r)
+		return ;
+	pthread_mutex_lock(r->stop);
+	r->params->stop = true;
+	pthread_mutex_unlock(r->stop);
 }
 
 void	ft_error(char *message, t_resources *r)

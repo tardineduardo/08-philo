@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2024/12/25 22:39:13 by eduribei         ###   ########.fr       */
+/*   Updated: 2024/12/27 14:49:40 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,10 @@ void	ft_validate_args(int argc, char *argv[], t_resources *r);
 void	*ft_philosopher(void *args);
 void	ft_alloc_resources(t_resources *r);
 void	ft_free_resources(t_resources *r);
+void	ft_stop_all_threads(t_resources *r);
 void	ft_error(char *message, t_resources *r);
-void	*ft_init_threads(t_resources *r);
-void	*ft_join_threads(t_resources *r);
+void	ft_init_threads(t_resources *r);
+void	ft_join_threads(t_resources *r);
 
 
 #endif
