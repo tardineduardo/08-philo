@@ -37,11 +37,12 @@ int	ft_atoi(const char *nptr)
 
 void	ft_alloc_resources(t_resources *r)
 {
-	r->mutex = malloc(r->params->nforks * sizeof(pthread_mutex_t));
-	r->th = malloc(r->params->nphilos * sizeof(pthread_t));
-	r->philo = malloc(r->params->nphilos * sizeof(t_philo));
-	r->chrono = malloc(sizeof(t_chrono));
-	if (!r->mutex || !r->th || !r->philo || !r->chrono)
+	r->forks = calloc(r->params->nforks, sizeof(pthread_mutex_t));
+	r->th = calloc(r->params->nphilos, sizeof(pthread_t));
+	r->philo = calloc(r->params->nphilos, sizeof(t_philo));
+	r->stop = calloc(1, sizeof(pthread_mutex_t));
+	r->chrono = calloc(1, sizeof(t_chrono));
+	if (!r->forks || !r->th || !r->philo || !r->chrono)
 	{
 		printf("malloc error.\n");
 		ft_free_resources(r);
@@ -50,20 +51,42 @@ void	ft_alloc_resources(t_resources *r)
 	return ;
 }
 
+
+void	ft_free_resources(t_resources *r)
+{
+
+
+
+
+}
+
 void	ft_free_resources(t_resources *r)
 {
 	if (!r)
 		return ;
+	if (r->th[0])
+	{
+		pthread_mutex_lock(r->stop);
+		r->params->stop = true;
+		pthread_mutex_unlock(r->stop);
+	}
 	if (r->th)
 		free(r->th);
-	if (r->mutex)
-		free(r->mutex);
+	if (r->forks)
+		free(r->forks);
 	if (r->philo)
 		free(r->philo);
 	if (r->chrono)
-		free(r->chrono);		
+		free(r->chrono);
 	if (r->params)
 		free(r->params);
 	free(r);
 	return ;
+}
+
+void	ft_error(char *message, t_resources *r)
+{
+	printf("Error: %s", message);
+	ft_free_resources(r);
+	exit(1);
 }

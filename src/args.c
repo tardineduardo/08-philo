@@ -14,20 +14,11 @@
 
 void	ft_validate_args(int argc, char *argv[], t_resources *r)
 {
-	//improve validations	
 	if (argc != 5 && argc != 6)
-	{
-		ft_free_resources(r);
-		printf("invalid arguments.\n");
-		exit(1);
-	}
+		ft_error("invalid arguments.\n", r);
 	r->params = malloc(sizeof(t_params));
 	if (!r->params)
-	{
-		printf("memory errorzzz.\n");		
-		ft_free_resources(r);
-		exit(2);
-	}
+		ft_error("malloc failed.\n", r);
 	r->params->nphilos = ft_atoi(argv[1]);
 	r->params->nforks = ft_atoi(argv[1]);
 	r->params->tdie = ft_atoi(argv[2]);

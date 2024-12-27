@@ -38,42 +38,50 @@ void	*ft_philosopher(void *args)
 
 	data = (t_philo *)args;
 	printf("Hello from philosopher %li.\n", data->index);
-
-
-
-
 }
 
-int	main(int argc, char *argv[])
+void	*ft_init_threads(t_resources *r)
 {
-	size_t			i;
-	t_resources		*r;
+	int	i;
 
-	r = malloc(sizeof(t_resources));
-	if (!r)
-	{
-		printf("malloc errorxxxx.\n");
-		ft_free_resources(r);
-		exit (1);
-	}
-	ft_validate_args(argc, argv, r);
-	ft_alloc_resources(r);
-	
 	i = 0;
+
 	while (i < r->params->nphilos)
 	{
 		r->philo[i].index = i;
+		r->philo[i].detached = false;
 		r->philo->r = r;
 		pthread_create(&r->th[i], NULL, &ft_philosopher, (void *)&r->philo[i]);
 		i++;
 	}
-	int j = 0;
+	return ;
+}
 
-	while (j < atoi(argv[1]))
+void	*ft_join_threads(t_resources *r)
+{
+	int	i;
+
+	i = 0;
+	while (i < r->params->nphilos)
 	{
-		pthread_join(r->th[j], NULL);
-		j++;
+		if (!r->philo[i].detached)
+			pthread_join(r->th[i], NULL);
+		i++;
 	}
+}
 
+
+
+int	main(int argc, char *argv[])
+{
+	t_resources		*r;
+
+	r = malloc(sizeof(t_resources));
+	if (!r)
+		ft_error("malloc failed.\n", r);
+	ft_validate_args(argc, argv, r);
+	ft_alloc_resources(r);
+	ft_init_threads(r);
+	ft_join_threads(r);
 	ft_free_resources(r);
 }
