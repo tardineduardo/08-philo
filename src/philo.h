@@ -47,6 +47,7 @@ typedef struct s_resources
 	pthread_t		*th;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*stop;
+	int				(*print)(char *, ...);
 	t_philo			*philo;
 	t_chrono		*chrono;
 	t_params		*params;

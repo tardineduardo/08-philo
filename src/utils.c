@@ -48,6 +48,7 @@ void	ft_alloc_resources(t_resources *r)
 		ft_free_resources(r);
 		exit(1);
 	}
+	r->print = &printf;
 	return ;
 }
 

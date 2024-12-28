@@ -13,41 +13,66 @@
 #include "philo.h"
 
 
+void	grab_fork_1(t_philo *philo)
+{	
+	ft_check_stop(philo);
+	pthread_mutex_lock(&philo->r->forks[philo->index]);	
+	ft_check_stop(philo);
+	pthread_mutex_lock(&philo->r->print);
+	print("philo %i grabbed a fork.\n", philo->index);
+	pthread_mutex_unlock(&philo->r->print);
+}
 
-void	eat(t_resources *r)
+void	grab_fork_2(t_philo *philo)
+{
+	ft_check_stop(philo);
+	pthread_mutex_lock(&philo->r->forks[philo->index + 1]);
+	ft_check_stop(philo);
+	pthread_mutex_lock(&philo->r->print);
+	print("philo %i grabbed a fork.\n", philo->index);
+	pthread_mutex_unlock(&philo->r->print);			
+
+}
+
+void	eat(t_philo *philo)
 {
 
 }
 
-void	thsleep(t_resources *r)
+void	thsleep(t_philo *philo)
 {
 
 
 }
 
-void	think(void)
+void	think(t_philo *philo)
 {
 
 }
 
-
+void	ft_check_stop(t_philo *philo)
+{
+	pthread_mutex_lock(philo->r->stop);
+	if (philo->r->stop)
+		pthread_exit(0);
+	pthread_mutex_unlock(philo->r->stop);
+	return ;
+}
 
 void	*ft_philosopher(void *args)
 {
-	t_philo	*data;
+	t_philo	*philo;
 
-	data = (t_philo *)args;
-	printf("Hello from philosopher %li.\n", data->index);
-
+	philo = (t_philo *)args;
+	printf("Hello from philosopher %li.\n", philo->index);
 	while (1)
 	{
-	pthread_mutex_lock(&data->r->forks[data->index]);
-	ft_check_stop(r->);									//CONTINUAR AQUI!!!!!
-	pthread_mutex_lock(&data->r->forks[data->index + 1]);
-
+		philo_grab_fork_1(philo);
+		philo_grab_fork_2(philo);
+		philo_eat(philo);
+		philo_sleep(philo);
+		philo_think(philo);
 	}
-
-	return (NULL);
 }
 
 void	ft_init_threads(t_resources *r)
@@ -73,6 +98,8 @@ void	ft_init_mutexes(t_resources *r)
 	a = 0;
 	while (a < r->params->nphilos)
 		pthread_mutex_init(&r->forks[a++], NULL);
+	pthread_mutex_init(&r->stop, NULL);
+
 }
 
 void	ft_join_threads(t_resources *r)
