@@ -14,10 +14,13 @@
 
 void	ft_check_stop(t_philo *philo)
 {
-	pthread_mutex_lock(philo->r->stop);
-	if (philo->r->stop)
+	pthread_mutex_lock(philo->r->stopm);
+	if (philo->r->dead)
+	{
+		pthread_mutex_unlock(philo->r->stopm);
 		pthread_exit(0);
-	pthread_mutex_unlock(philo->r->stop);
+	}
+	pthread_mutex_unlock(philo->r->stopm);
 	return ;
 }
 
@@ -31,9 +34,9 @@ void	*ft_philosopher(void *args)
 	{
 		philo_grab_fork_1(philo);
 		philo_grab_fork_2(philo);
-		philo_eat(philo);
-		philo_sleep(philo);
-		philo_think(philo);
+		philo_eating(philo);
+		philo_sleeping(philo);
+		philo_thinking(philo);
 	}
 }
 

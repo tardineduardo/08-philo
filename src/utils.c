@@ -40,15 +40,15 @@ void	ft_alloc_resources(t_resources *r)
 	r->forks = calloc(r->params->nforks, sizeof(pthread_mutex_t));
 	r->th = calloc(r->params->nphilos, sizeof(pthread_t));
 	r->philo = calloc(r->params->nphilos, sizeof(t_philo));
-	r->stop = calloc(1, sizeof(pthread_mutex_t));
-	r->chrono = calloc(1, sizeof(t_chrono));
-	if (!r->forks || !r->th || !r->philo || !r->chrono)
+	r->stopm = calloc(1, sizeof(pthread_mutex_t));
+	r->printm = calloc(1, sizeof(pthread_mutex_t));
+	r->dead = false;
+	if (!r->forks || !r->th || !r->philo)
 	{
 		printf("malloc error.\n");
 		ft_free_resources(r);
 		exit(1);
 	}
-	r->print = &printf;
 	return ;
 }
 
@@ -64,8 +64,6 @@ void	ft_free_resources(t_resources *r)
 		free(r->forks);
 	if (r->philo)
 		free(r->philo);
-	if (r->chrono)
-		free(r->chrono);
 	if (r->params)
 		free(r->params);
 	free(r);
@@ -76,9 +74,9 @@ void	ft_stop_all_threads(t_resources *r)
 {
 	if (!r)
 		return ;
-	pthread_mutex_lock(r->stop);
+	pthread_mutex_lock(r->stopm);
 	r->params->stop = true;
-	pthread_mutex_unlock(r->stop);
+	pthread_mutex_unlock(r->stopm);
 }
 
 void	ft_error(char *message, t_resources *r)

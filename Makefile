@@ -1,6 +1,8 @@
 MAIN =  src/philo.c \
 		src/utils.c \
 		src/args.c \
+		src/inits.c	\
+		src/actions.c \
 
 OBJS_SRC =	$(MAIN:.c=.o)
 

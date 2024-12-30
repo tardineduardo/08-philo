@@ -16,14 +16,27 @@
 void	ft_assign_forks(t_philo *philo)
 {
 	size_t	i;
+	size_t	n;
+
 
 	i = philo->index;
+	n = philo->r->params->nphilos;
 
-	if 
-
-	philo->fork1 = &philo->r->forks[i];
-
-
+	if (i == 0)
+	{
+		philo->fork1 = &philo->r->forks[0];
+		philo->fork2 = &philo->r->forks[1];
+	}
+	else if (i == n - 1)
+	{
+		philo->fork1 = &philo->r->forks[0];
+		philo->fork2 = &philo->r->forks[i];
+	}
+	else
+	{
+		philo->fork1 = &philo->r->forks[i];
+		philo->fork2 = &philo->r->forks[i + 1];
+	}
 }
 
 
@@ -35,9 +48,10 @@ void	ft_init_threads(t_resources *r)
 	while (i < r->params->nphilos)
 	{
 		r->philo[i].index = i;
+		r->philo[i].total_meals = 0;
 		r->philo[i].detached = false;
-		r->philo->r = r;
-		ft_assign_forks(r->philo[i]);
+		r->philo[i].r = r;
+		ft_assign_forks(&r->philo[i]);
 		pthread_create(&r->th[i], NULL, &ft_philosopher, (void *)&r->philo[i]);
 		i++;
 	}
@@ -51,6 +65,7 @@ void	ft_init_mutexes(t_resources *r)
 	a = 0;
 	while (a < r->params->nphilos + 1)
 		pthread_mutex_init(&r->forks[a++], NULL);
-	pthread_mutex_init(&r->stop, NULL);
+	pthread_mutex_init(r->stopm, NULL);
+	pthread_mutex_init(r->printm, NULL);
 
 }

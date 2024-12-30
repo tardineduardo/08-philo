@@ -49,8 +49,9 @@ typedef struct s_resources
 {
 	pthread_t		*th;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*stop;
-	int				(*print)(char *, ...);
+	pthread_mutex_t	*stopm;
+	pthread_mutex_t	*printm;
+	bool			*dead;	
 	t_philo			*philo;
 	t_params		*params;
 }	t_resources;
@@ -68,13 +69,14 @@ void	ft_alloc_resources(t_resources *r);
 void	*ft_philosopher(void *args);
 
 //Actions
-void	grab_fork_1(t_philo *philo);
-void	grab_fork_2(t_philo *philo);
-void	eating(t_philo *philo);
-void	sleeping(t_philo *philo);
-void	thinking(t_philo *philo);
+void	philo_grab_fork_1(t_philo *philo);
+void	philo_grab_fork_2(t_philo *philo);
+void	philo_eating(t_philo *philo);
+void	philo_sleeping(t_philo *philo);
+void	philo_thinking(t_philo *philo);
 
 //exiting
+void	ft_check_stop(t_philo *philo);
 void	ft_stop_all_threads(t_resources *r);
 void	ft_join_threads(t_resources *r);
 void	ft_free_resources(t_resources *r);
