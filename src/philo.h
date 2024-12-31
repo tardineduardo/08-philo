@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2024/12/28 17:06:59 by eduribei         ###   ########.fr       */
+/*   Updated: 2024/12/30 21:51:07 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ void	ft_alloc_resources(t_resources *r);
 void	*ft_philosopher(void *args);
 
 //Actions
-void	philo_grab_fork_1(t_philo *philo);
-void	philo_grab_fork_2(t_philo *philo);
-void	philo_eating(t_philo *philo);
-void	philo_sleeping(t_philo *philo);
-void	philo_thinking(t_philo *philo);
+bool	philo_grab_fork_1(t_philo *philo);
+bool	philo_grab_fork_2(t_philo *philo);
+bool	philo_eating(t_philo *philo);
+bool	philo_sleeping(t_philo *philo);
+bool	philo_thinking(t_philo *philo);
 
 //exiting
 void	ft_check_stop(t_philo *philo);
