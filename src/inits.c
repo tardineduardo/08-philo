@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:11:14 by eduribei          #+#    #+#             */
-/*   Updated: 2024/12/28 17:44:02 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/01 20:37:59 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	ft_assign_forks(t_philos *philo)
 
 	i = philo->index;
 	n = philo->main->params->number_of_philos;
-
 	if (i == 0)
 	{
 		philo->fork1 = &philo->main->forks[0];
@@ -47,10 +46,9 @@ void	ft_init_threads(t_resources *main)
 	{
 		main->philo[i].index = i;
 		main->philo[i].number_of_meals_had = 0;
-		main->philo[i].is_detached = false;
 		main->philo[i].main = main;
+		main->philo[i].t_of_last_meal = main->params->start_time;
 		ft_assign_forks(&main->philo[i]);
-		gettimeofday(&main->philo->time_of_last_meal, NULL);
 		pthread_create(&main->th[i], NULL, &ft_philo, (void *)&main->philo[i]);
 		i++;
 	}

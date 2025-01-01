@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2024/12/30 21:51:07 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/01 17:45:23 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_params
 	size_t			time_to_die;
 	size_t			time_eating;
 	size_t			number_of_meals_to_eat;
+	timeval			start_time;
 	bool			stop;
 	bool			is_someone_dead;
 	pthread_mutex_t	*stop_mutex;
@@ -43,11 +44,8 @@ typedef struct s_philos
 	pthread_mutex_t		*fork1;
 	pthread_mutex_t		*fork2;
 	size_t				number_of_meals_had;
-	timeval				time_of_last_meal;
+	timeval				t_of_last_meal;
 	timeval				curr_time;
-	size_t				time_since_last_meal;
-	// RESOLVER TOTAL TIME ELAPSED.
-	bool				is_detached;
 	struct s_resources	*main;
 }	t_philos;
 
@@ -89,17 +87,20 @@ void	ft_free_resources(t_resources *main);
 //Error
 void	ft_error(char *message, t_resources *main);
 
+size_t	ft_t_delta_ms(timeval start, timeval end);
+size_t	ft_t_delta_us(timeval start, timeval end);
 
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-#define GREY	"\033[90m"
-#define GREEN   "\033[32m"
-#define YELLOW  "\033[33m"
-#define BLUE    "\033[34m"
-#define MAGENTA "\033[35m"
-#define CYAN    "\033[36m"
-#define WHITE   "\033[37m"
-#define BRIGHT_GREEN "\033[92m"
+
+# define RESET   "\033[0m"
+# define RED     "\033[31m"
+# define GREY	"\033[90m"
+# define GREEN   "\033[32m"
+# define YELLOW  "\033[33m"
+# define BLUE    "\033[34m"
+# define MAGENTA "\033[35m"
+# define CYAN    "\033[36m"
+# define WHITE   "\033[37m"
+# define BRIGHT_GREEN "\033[92m"
 
 
 #endif
