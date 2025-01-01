@@ -12,60 +12,94 @@
 
 #include "philo.h"
 
-bool	philo_grab_fork_1(t_philo *philo)
+bool	philo_grab_fork_1(t_philos *philo, t_params *params)
 {
-	ft_check_stop(philo);
+	if (ft_stop(philo, params))
+		return (false);
 	pthread_mutex_lock(philo->fork1);
-	gettimeofday(&philo->tlog, NULL);
-
-	ft_check_stop(philo);
-	pthread_mutex_lock(philo->r->printm);
-	printf("%li %li has taken a fork\n", philo->tlog.tv_usec, philo->index);
-	pthread_mutex_unlock(philo->r->printm);
-
+	gettimeofday(&philo->curr_time, NULL);
+	if (ft_stop(philo, params))
+	{
+		pthread_mutex_unlock(philo->fork1);
+		return (false);
+	}
+	pthread_mutex_lock(params->print_mutex);
+	printf("%li %li has taken a fork\n", philo->curr_time.tv_usec / 1000, philo->index);
+	pthread_mutex_unlock(params->print_mutex);
+	return (true);
 }
 
-bool	philo_grab_fork_2(t_philo *philo)
+bool	philo_grab_fork_2(t_philos *philo, t_params *params)
 {
-	ft_check_stop(philo);  // SE MORREU, SOLTAR OS GARFOS
+	if (ft_stop(philo, params))
+	{
+		pthread_mutex_unlock(philo->fork1);
+		return (false);
+	}
 	pthread_mutex_lock(philo->fork2);
-	gettimeofday(&philo->tlog, NULL);
-
-	ft_check_stop(philo);
-	pthread_mutex_lock(philo->r->printm);
-	printf("%li %li has taken a fork\n", philo->tlog.tv_usec, philo->index);
-	pthread_mutex_unlock(philo->r->printm);
-
-
+	gettimeofday(&philo->curr_time, NULL);
+	if (ft_stop(philo, params))
+	{
+		pthread_mutex_unlock(philo->fork1);
+		pthread_mutex_unlock(philo->fork2);
+		return (false);
+	}
+	pthread_mutex_lock(params->print_mutex);
+	printf("%li %li has taken a fork\n", philo->curr_time.tv_usec / 1000, philo->index);
+	pthread_mutex_unlock(params->print_mutex);
+	return (true);
 }
 
-bool	philo_eating(t_philo *philo)
+bool	philo_eating(t_philos *philo, t_params *params)
 {
-	ft_check_stop(philo); // SE MORREU, SOLTAR OS GARFOS
-	pthread_mutex_lock(philo->r->printm); 
-	printf("%li %li is eating\n", philo->tlog.tv_usec, philo->index);
-	pthread_mutex_unlock(philo->r->printm);
-	usleep(philo->r->params->teat);
-	pthread_mutex_unlock(philo->fork2); // CHECAR ORDEM
+	if (ft_stop(philo, params))
+	{
+		pthread_mutex_unlock(philo->fork2);
+		pthread_mutex_unlock(philo->fork1);
+		return (false);
+	}
+
+	gettimeofday(&philo->time_of_last_meal, NULL);
+	pthread_mutex_lock(params->print_mutex); 
+	printf("%li %li is eating\n", philo->curr_time.tv_usec / 1000, philo->index);
+	pthread_mutex_unlock(params->print_mutex);
+	//MAYBE CHECK STOP HERE AS WELL
+
+	gettimeofday(&philo->time_of_last_meal, NULL);
+	usleep(params->time_eating);
 	pthread_mutex_unlock(philo->fork1);
-
+	pthread_mutex_unlock(philo->fork2);
+	philo->number_of_meals_had += 1;
+	printf("philo %li just had %li of %li meals\n", philo->index, philo->number_of_meals_had, params->number_of_meals_to_eat);
+	if (philo->number_of_meals_had == params->number_of_meals_to_eat)
+		return (false);
+	return (true);
 }
 
-bool	philo_sleeping(t_philo *philo)
+bool	philo_sleeping(t_philos *philo, t_params *params)
 {
-	ft_check_stop(philo);
-	pthread_mutex_lock(philo->r->printm);
-	printf("%li %li is sleeping\n", philo->tlog.tv_usec, philo->index);
-	pthread_mutex_unlock(philo->r->printm);
-	usleep(philo->r->params->tsleep);
-
+	if (ft_stop(philo, params))
+		return (false);
+	gettimeofday(&philo->time_of_last_meal, NULL);
+	pthread_mutex_lock(params->print_mutex);
+	printf("%li %li is sleeping\n", philo->curr_time.tv_usec / 1000, philo->index);
+	pthread_mutex_unlock(params->print_mutex);
+	//HE CANT SLEEP IF HE IS GOING TO DIE
+	usleep(params->time_sleeping);
+	return (true);
 }
 
-bool	philo_thinking(t_philo *philo)
+bool	philo_thinking(t_philos *philo, t_params *params)
 {
-	ft_check_stop(philo);
-	pthread_mutex_lock(philo->r->printm);
-	printf("%li %li is thinking\n", philo->tlog.tv_usec, philo->index);
-	pthread_mutex_unlock(philo->r->printm);
-	// ESPERAR UMA MERREQUINHA 
+	if (ft_stop(philo, params))
+		return (false);
+	gettimeofday(&philo->curr_time, NULL);
+	pthread_mutex_lock(params->print_mutex);
+	printf("%li %li is thinking\n", philo->curr_time.tv_usec / 1000, philo->index);
+	pthread_mutex_unlock(params->print_mutex);
+	// "ESPERAR UMA MERREQUINHA" (by danbarbo)
+	// Aqui, thinking poderia ser algum processo, que eu pudesse
+	// interromper a qualquer momento, mas eu não sei como dar KILL
+	// em uma thread.
+	return (true);
 }

@@ -35,18 +35,22 @@ int	ft_atoi(const char *nptr)
 	return (nb * sign);
 }
 
-void	ft_alloc_resources(t_resources *r)
+void	ft_alloc_resources(t_resources *main)
 {
-	r->forks = calloc(r->params->nforks, sizeof(pthread_mutex_t));
-	r->th = calloc(r->params->nphilos, sizeof(pthread_t));
-	r->philo = calloc(r->params->nphilos, sizeof(t_philo));
-	r->stopm = calloc(1, sizeof(pthread_mutex_t));
-	r->printm = calloc(1, sizeof(pthread_mutex_t));
-	r->dead = false;
-	if (!r->forks || !r->th || !r->philo)
+	t_params *params;
+
+	params = main->params;
+	main->forks = calloc(params->nb_of_forks + 1, sizeof(pthread_mutex_t));
+	main->th = calloc(params->number_of_philos, sizeof(pthread_t));
+	main->philo = calloc(params->number_of_philos, sizeof(t_philos));
+	main->stop_mutex = calloc(1, sizeof(pthread_mutex_t));
+	main->print_mutex = calloc(1, sizeof(pthread_mutex_t));
+	main->params->is_someone_dead = false;
+
+	if (!main->forks || !main->th || !main->philo || !main->print_mutex)
 	{
 		printf("malloc error.\n");
-		ft_free_resources(r);
+		ft_free_resources(main);
 		exit(1);
 	}
 	return ;
@@ -54,19 +58,32 @@ void	ft_alloc_resources(t_resources *r)
 
 
 // FREE RESOURCES WHEN ONLY WHEN THREADS RETURN.
-void	ft_free_resources(t_resources *r)
+void	ft_free_resources(t_resources *main)
 {
-	if (!r)
+	if (!main)
 		return ;
-	if (r->th)
-		free(r->th);
-	if (r->forks)
-		free(r->forks);
-	if (r->philo)
-		free(r->philo);
-	if (r->params)
-		free(r->params);
-	free(r);
+	if (main->th)
+		free(main->th);
+	if (main->forks)
+	{
+		//ft pthread_mutex_destroy(...)
+		free(main->forks);
+	}
+	if (main->philo)
+		free(main->philo);
+	if (main->params)
+		free(main->params);
+	if (main->stop_mutex)
+	{
+		pthread_mutex_destroy(main->stop_mutex);
+		free(main->stop_mutex);
+	}
+	if (main->print_mutex)
+	{
+		pthread_mutex_destroy(main->print_mutex);	
+		free(main->print_mutex);		
+	}	
+	free(main);
 	return ;
 }
 //1 - STOP ALL THREADS
@@ -74,9 +91,9 @@ void	ft_stop_all_threads(t_resources *r)
 {
 	if (!r)
 		return ;
-	pthread_mutex_lock(r->stopm);
+	pthread_mutex_lock(r->stop_mutex);
 	r->params->stop = true;
-	pthread_mutex_unlock(r->stopm);
+	pthread_mutex_unlock(r->stop_mutex);
 }
 
 void	ft_error(char *message, t_resources *r)

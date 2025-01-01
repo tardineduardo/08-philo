@@ -8,8 +8,8 @@ OBJS_SRC =	$(MAIN:.c=.o)
 
 CC = cc
 RM = rm -f
-#CFLAGS = -Wall -Wextra -Werror -g
-CFLAGS = -g -pthread
+#CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -g -lpthread
 
 NAME = philo
 

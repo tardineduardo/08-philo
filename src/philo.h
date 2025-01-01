@@ -19,69 +19,87 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <stdbool.h>
+# include <limits.h>
 
 typedef struct timeval	timeval;
 
 typedef struct s_params
 {
-	size_t		nphilos;
-	size_t		nforks;
-	size_t		tsleep;
-	int			tdie;
-	int			teat;
-	int			nmeals;
-	bool		stop;
+	size_t			number_of_philos;
+	size_t			nb_of_forks;
+	size_t			time_sleeping;
+	size_t			time_to_die;
+	size_t			time_eating;
+	size_t			number_of_meals_to_eat;
+	bool			stop;
+	bool			is_someone_dead;
+	pthread_mutex_t	*stop_mutex;
+	pthread_mutex_t	*print_mutex;
 }	t_params;
 
-typedef struct s_philo
+typedef struct s_philos
 {
 	size_t				index;
 	pthread_mutex_t		*fork1;
 	pthread_mutex_t		*fork2;
-	size_t				total_meals;
-	size_t				time_starving;
-	timeval				tlog;
-	bool				detached;
-	struct s_resources	*r;
-}	t_philo;
+	size_t				number_of_meals_had;
+	timeval				time_of_last_meal;
+	timeval				curr_time;
+	size_t				time_since_last_meal;
+	// RESOLVER TOTAL TIME ELAPSED.
+	bool				is_detached;
+	struct s_resources	*main;
+}	t_philos;
 
 typedef struct s_resources
 {
 	pthread_t		*th;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*stopm;
-	pthread_mutex_t	*printm;
-	bool			*dead;	
-	t_philo			*philo;
+	pthread_mutex_t	*stop_mutex;
+	pthread_mutex_t	*print_mutex;
+	t_philos		*philo;
 	t_params		*params;
 }	t_resources;
 
 //Validation
 int		ft_atoi(const char *nptr);
-void	ft_validate_args(int argc, char *argv[], t_resources *r);
+void	ft_validate_args(int argc, char *argv[], t_resources *main);
 
 //Inits
-void	ft_init_threads(t_resources *r);
-void	ft_init_mutexes(t_resources *r);
-void	ft_alloc_resources(t_resources *r);
+void	ft_init_threads(t_resources *main);
+void	ft_init_mutexes(t_resources *main);
+void	ft_alloc_resources(t_resources *main);
 
 //Philosopher
-void	*ft_philosopher(void *args);
+void	*ft_philo(void *args);
 
 //Actions
-bool	philo_grab_fork_1(t_philo *philo);
-bool	philo_grab_fork_2(t_philo *philo);
-bool	philo_eating(t_philo *philo);
-bool	philo_sleeping(t_philo *philo);
-bool	philo_thinking(t_philo *philo);
+bool	philo_grab_fork_1(t_philos *philo, t_params *params);
+bool	philo_grab_fork_2(t_philos *philo, t_params *params);
+bool	philo_eating(t_philos *philo, t_params *params);
+bool	philo_sleeping(t_philos *philo, t_params *params);
+bool	philo_thinking(t_philos *philo, t_params *params);
 
 //exiting
-void	ft_check_stop(t_philo *philo);
-void	ft_stop_all_threads(t_resources *r);
-void	ft_join_threads(t_resources *r);
-void	ft_free_resources(t_resources *r);
+bool	ft_stop(t_philos *philo, t_params *params);
+void	ft_stop_all_threads(t_resources *main);
+void	ft_join_threads(t_resources *main);
+void	ft_free_resources(t_resources *main);
 
 //Error
-void	ft_error(char *message, t_resources *r);
+void	ft_error(char *message, t_resources *main);
+
+
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREY	"\033[90m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
+#define BRIGHT_GREEN "\033[92m"
+
 
 #endif

@@ -12,64 +12,79 @@
 
 #include "philo.h"
 
-void	ft_check_stop(t_philo *philo)
+bool	ft_stop(t_philos *philo, t_params *params)
 {
-	pthread_mutex_lock(philo->r->stopm);
-	if (philo->r->dead)
+	printf(YELLOW "philo %li is checking a stop.\n" RESET, philo->index);
+	pthread_mutex_lock(params->stop_mutex);
+	if (params->is_someone_dead)
 	{
-		pthread_mutex_unlock(philo->r->stopm);
-		pthread_exit(0);
+	pthread_mutex_unlock(params->stop_mutex);
+		printf(RED "philo %li confirmed that someone died.\n" RESET, philo->index);
+		return (true);
 	}
-	pthread_mutex_unlock(philo->r->stopm);
-	return ;
+	gettimeofday(&philo->curr_time, NULL);
+	printf(YELLOW "philo %li now is %li, main start was %li, diff is %li.\n" RESET, philo->index, philo->curr_time.tv_usec/1000, philo->time_of_last_meal.tv_usec/1000, philo->curr_time.tv_usec/1000 - philo->time_of_last_meal.tv_usec/1000);
+	if (philo->curr_time.tv_usec - philo->time_of_last_meal.tv_usec >=  params->time_to_die)
+	{
+		printf(RED "philo %li confirmed it died.\n" RESET, philo->index);
+		pthread_mutex_unlock(params->stop_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(params->stop_mutex);
+	printf(GREEN "philo %li got ok to go.\n" RESET, philo->index);
+	return (false);
 }
 
-void	*ft_philosopher(void *args)
+void	*ft_philo(void *args)
 {
-	t_philo	*philo;
+	t_philos		*philo;
+	t_params	*params;
 
-	philo = (t_philo *)args;
-	//printf("Hello from philosopher %li.\n", philo->index);
+	philo = (t_philos *)args;
+	params = philo->main->params;
+
+	printf("Hello from philosopher %li.\n", philo->index);
 	while (1)
 	{
-		if (philo_grab_fork_1(philo))
-			break ;
-		if (philo_grab_fork_2(philo))
-			break ;
-		if (philo_eating(philo))
-			break ;
-		if (philo_sleeping(philo))
-			break ;
-		if (philo_thinking(philo))
-			break ;
+		if (!philo_grab_fork_1(philo, params))
+			return (NULL);
+		if (!philo_grab_fork_2(philo, params))
+			return (NULL);
+		if (!philo_eating(philo, params))
+			return (NULL);
+		if (!philo_sleeping(philo, params))
+			return (NULL);
+		if (!philo_thinking(philo, params))
+			return (NULL);
 	}
-	return ;
+	printf(BLUE "philo %li is done.\n" RESET, philo->index);
+	return (NULL);
 }
 
-void	ft_join_threads(t_resources *r)
+void	ft_join_threads(t_resources *main)
 {
 	int	i;
 
 	i = 0;
-	while (i < r->params->nphilos)
+	while (i < main->params->number_of_philos)
 	{
-		if (!r->philo[i].detached)
-			pthread_join(r->th[i], NULL);
+		if (!main->philo[i].is_detached)
+			pthread_join(main->th[i], NULL);
 		i++;
 	}
 }
 
 int	main(int argc, char *argv[])
 {
-	t_resources		*r;
+	t_resources		*main;
 
-	r = malloc(sizeof(t_resources));
-	if (!r)
-		ft_error("malloc failed.\n", r);
-	ft_validate_args(argc, argv, r);
-	ft_alloc_resources(r);
-	ft_init_mutexes(r);
-	ft_init_threads(r);
-	ft_join_threads(r);
-	ft_free_resources(r);
+	main = malloc(sizeof(t_resources));
+	if (!main)
+		ft_error("malloc failed.\n", main);
+	ft_validate_args(argc, argv, main);
+	ft_alloc_resources(main);
+	ft_init_mutexes(main);
+	ft_init_threads(main);
+	ft_join_threads(main);
+	ft_free_resources(main);
 }
