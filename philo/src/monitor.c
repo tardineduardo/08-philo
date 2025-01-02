@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 20:42:56 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 20:24:41 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:32:37 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ static bool	ft_philosopher_has_died(size_t index, t_main *main)
 		timedelta = ft_t_delta_ms(main->params->start_time, now);
 		pthread_mutex_lock(&main->print_mutex);
 		printf("%li %li died\n", timedelta, main->ph[index].index + 1);
-		pthread_mutex_unlock(&main->print_mutex);
 		pthread_mutex_unlock(&main->stop_mutex);
+		pthread_mutex_unlock(&main->print_mutex);
 		pthread_detach(main->monitor);
 		return (true);
 	}

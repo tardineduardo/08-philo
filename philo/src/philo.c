@@ -63,5 +63,7 @@ int	main(int argc, char *argv[])
 	ft_init_threads(main);
 	ft_join_threads(main);
 	ft_free_resources(main);
+	ft_destroy_mutexes(main);
+	free(main);
 	return (0);
 }
