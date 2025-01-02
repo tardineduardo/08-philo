@@ -6,6 +6,7 @@ MAIN =  src/philo.c \
 		src/monitor.c \
 		src/time.c \
 		src/allocs.c \
+		src/free.c \
 
 OBJS_SRC =	$(MAIN:.c=.o)
 

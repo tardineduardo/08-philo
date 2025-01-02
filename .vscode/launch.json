@@ -58,11 +58,11 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [],
+      "args": ["1", "800", "200", "200"],
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/nfs/homes/eduribei/Documentos/repos/08-philo/philo/src",
-      "program": "/nfs/homes/eduribei/Documentos/repos/08-philo/philo/src/build/Debug/outDebug",
+      "program": "/nfs/homes/eduribei/Documentos/repos/08-philo/philo/philo",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

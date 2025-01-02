@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 20:42:56 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 13:24:05 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 19:42:29 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,12 @@ static bool	ft_total_meals_are_complete(t_main *main)
 	return (false);
 }
 
-
 static bool	ft_philosopher_has_died(size_t index, t_main *main)
 {
 	t_timeval	now;
 	size_t		timedelta;
 
-	gettimeofday(&now, NULL);
+	ft_get_time(&now, main->params->time_mutex);
 	main->ph[index].tm_starv = ft_t_delta_us(main->ph[index].tm_lastmeal, now);
 	pthread_mutex_lock(&main->stop_mutex);
 	if (main->ph[index].tm_starv >= main->params->tm_die)
@@ -45,7 +44,7 @@ static bool	ft_philosopher_has_died(size_t index, t_main *main)
 		printf("%li %li died\n", timedelta, main->ph[index].index + 1);
 		pthread_mutex_unlock(&main->print_mutex);
 		pthread_mutex_unlock(&main->stop_mutex);
-		pthread_detach(main->monitor);
+//		pthread_detach(main->monitor);
 		return (true);
 	}
 	pthread_mutex_unlock(&main->stop_mutex);
@@ -69,7 +68,7 @@ void	*stop_monitor(void *arg)
 				return (NULL);
 			philo_index++;
 		}
-		usleep(1000);
+		usleep(5000);
 	}
 	return (NULL);
 }
