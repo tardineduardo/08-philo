@@ -6,13 +6,13 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 20:48:56 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 20:49:14 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 11:47:55 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-size_t	ft_t_delta_ms(timeval start, timeval end)
+size_t	ft_t_delta_ms(t_timeval start, t_timeval end)
 {
 	ssize_t	seconds;
 	ssize_t	microseconds;
@@ -27,7 +27,7 @@ size_t	ft_t_delta_ms(timeval start, timeval end)
 	return (seconds * 1000 + microseconds / 1000);
 }
 
-size_t	ft_t_delta_us(timeval start, timeval end)
+size_t	ft_t_delta_us(t_timeval start, t_timeval end)
 {
 	ssize_t	seconds;
 	ssize_t	microseconds;

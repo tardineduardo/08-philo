@@ -1,6 +1,6 @@
 arg 0 - ./philo 
 arg 1 - nb_philos
-arg 2 - time_to_die
+arg 2 - tm_die
 arg 3 - time_to_eat
 arg 4 - time_to_sleep
 arg 5 - number_of_meals
@@ -8,9 +8,9 @@ arg 5 - number_of_meals
 nb_philos
 The number of philosophers and also the number of forks.
 
-time_to_die
+tm_die
 (in milliseconds)
-If a philosopher didn’t start eating "time_to_die" since the ***BEGINNING*** of their last meal or the beginning of the simulation, they die.
+If a philosopher didn’t start eating "tm_die" since the ***BEGINNING*** of their last meal or the beginning of the simulation, they die.
 
 time_to_eat
 (in milliseconds)

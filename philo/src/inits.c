@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:11:14 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 23:14:35 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 12:21:57 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	ft_assign_forks(t_philos *philo)
 
 	i = philo->index;
 	n = philo->main->params->nb_philos;
-
 	if (i == n - 1)
 	{
 		philo->fork1 = &philo->main->forks[0];
@@ -32,30 +31,33 @@ void	ft_assign_forks(t_philos *philo)
 	}
 }
 
-void	ft_init_threads(t_resources *main)
+void	ft_init_threads(t_main *main)
 {
-	int	i;
+	size_t	s;
+	size_t	i;
 
 	i = 0;
 	while (i < main->params->nb_philos)
 	{
-		main->philo[i].index = i;
-		main->philo[i].number_of_meals_had = 0;
-		main->philo[i].main = main;
-		main->philo[i].t_of_last_meal = main->params->start_time;
-		ft_assign_forks(&main->philo[i]);
-		if (pthread_create(&main->th[i], NULL, &ft_philo, (void *)&main->philo[i]) != 0)
+		main->ph[i].index = i;
+		main->ph[i].nb_meals_had = 0;
+		main->ph[i].main = main;
+		main->ph[i].tm_lastmeal = main->params->start_time;
+		ft_assign_forks(&main->ph[i]);
+		s = pthread_create(&main->th[i], NULL, &ft_philo, (void *)&main->ph[i]);
+		if (s != 0)
 			ft_error("Failed to create philosopher thread.\n", main);
 		i++;
 	}
-	if (pthread_create(&main->monitor, NULL, &stop_monitor, main) != 0)
+	s = pthread_create(&main->monitor, NULL, &stop_monitor, main);
+	if (s != 0)
 		ft_error("Failed to create monitor thread.\n", main);
 	return ;
 }
 
-void	ft_init_mutexes(t_resources *r)
+void	ft_init_mutexes(t_main *r)
 {
-	int	a;
+	size_t	a;
 
 	a = 0;
 	while (a < r->params->nb_philos + 1)
