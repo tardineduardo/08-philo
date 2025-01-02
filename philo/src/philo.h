@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 12:30:29 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 13:00:25 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,13 @@ bool	ft_sleeping(t_philos *philo, t_params *params);
 bool	ft_thinking(t_philos *philo, t_params *params);
 
 //exiting
-bool	ft_stop(t_params *params);
+bool	ft_thread_must_stop(t_params *params);
 void	ft_join_threads(t_main *main);
 void	ft_free_resources(t_main *main);
 
 //Error
 void	ft_error(char *message, t_main *main);
 
-int		ft_update_meal_count(t_philos *philo, t_params *params);
 size_t	ft_t_delta_ms(t_timeval start, t_timeval end);
 size_t	ft_t_delta_us(t_timeval start, t_timeval end);
 void	*stop_monitor(void *arg);

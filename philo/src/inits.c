@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:11:14 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 12:21:57 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 13:23:02 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,42 +31,39 @@ void	ft_assign_forks(t_philos *philo)
 	}
 }
 
-void	ft_init_threads(t_main *main)
+void	ft_init_threads(t_main *m)
 {
-	size_t	s;
 	size_t	i;
 
 	i = 0;
-	while (i < main->params->nb_philos)
+	while (i < m->params->nb_philos)
 	{
-		main->ph[i].index = i;
-		main->ph[i].nb_meals_had = 0;
-		main->ph[i].main = main;
-		main->ph[i].tm_lastmeal = main->params->start_time;
-		ft_assign_forks(&main->ph[i]);
-		s = pthread_create(&main->th[i], NULL, &ft_philo, (void *)&main->ph[i]);
-		if (s != 0)
-			ft_error("Failed to create philosopher thread.\n", main);
+		m->ph[i].index = i;
+		m->ph[i].nb_meals_had = 0;
+		m->ph[i].main = m;
+		m->ph[i].tm_lastmeal = m->params->start_time;
+		ft_assign_forks(&m->ph[i]);
+		if (pthread_create(&m->th[i], NULL, &ft_philo, (void *)&m->ph[i]) != 0)
+			ft_error("Failed to create philosopher thread.\n", m);
 		i++;
 	}
-	s = pthread_create(&main->monitor, NULL, &stop_monitor, main);
-	if (s != 0)
-		ft_error("Failed to create monitor thread.\n", main);
+	if (pthread_create(&m->monitor, NULL, &stop_monitor, m) != 0)
+		ft_error("Failed to create monitor thread.\n", m);
 	return ;
 }
 
-void	ft_init_mutexes(t_main *r)
+void	ft_init_mutexes(t_main *main)
 {
 	size_t	a;
 
 	a = 0;
-	while (a < r->params->nb_philos + 1)
-		pthread_mutex_init(&r->forks[a++], NULL);
-	pthread_mutex_init(&r->stop_mutex, NULL);
-	pthread_mutex_init(&r->print_mutex, NULL);
-	pthread_mutex_init(&r->meal_mutex, NULL);
-	r->params->stop_mutex = &r->stop_mutex;
-	r->params->print_mutex = &r->print_mutex;
-	r->params->meal_mutex = &r->meal_mutex;
+	while (a < main->params->nb_philos + 1)
+		pthread_mutex_init(&main->forks[a++], NULL);
+	pthread_mutex_init(&main->stop_mutex, NULL);
+	pthread_mutex_init(&main->print_mutex, NULL);
+	pthread_mutex_init(&main->meal_mutex, NULL);
+	main->params->stop_mutex = &main->stop_mutex;
+	main->params->print_mutex = &main->print_mutex;
+	main->params->meal_mutex = &main->meal_mutex;
 	return ;
 }

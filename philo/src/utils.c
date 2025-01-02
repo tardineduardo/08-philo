@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 18:39:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 12:30:03 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 12:59:35 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,14 @@ void	ft_error(char *message, t_main *r)
 	exit(1);
 }
 
-int	ft_update_meal_count(t_philos *philo, t_params *params)
+bool	ft_thread_must_stop(t_params *params)
 {
-	pthread_mutex_lock(params->meal_mutex);
-	philo->nb_meals_had += 1;
-	params->total_meals_ct += 1;
-	pthread_mutex_unlock(params->meal_mutex);
-	if (philo->nb_meals_had == params->nb_meals_to_eat)
+	pthread_mutex_lock(params->stop_mutex);
+	if (params->must_stop)
 	{
-		pthread_mutex_lock(params->print_mutex);
-		printf(BLUE "--- %li had all %li meals! \n" RESET, philo->index + 1, params->nb_meals_to_eat);
-		pthread_mutex_unlock(params->print_mutex);
-		return (5);
+		pthread_mutex_unlock(params->stop_mutex);
+		return (true);
 	}
-	return (0);
+	pthread_mutex_unlock(params->stop_mutex);
+	return (false);
 }

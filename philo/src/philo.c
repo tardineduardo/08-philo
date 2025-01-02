@@ -12,18 +12,6 @@
 
 #include "philo.h"
 
-bool	ft_stop(t_params *params)
-{
-	pthread_mutex_lock(params->stop_mutex);
-	if (params->must_stop)
-	{
-		pthread_mutex_unlock(params->stop_mutex);
-		return (true);
-	}
-	pthread_mutex_unlock(params->stop_mutex);
-	return (false);
-}
-
 void	*ft_philo(void *args)
 {
 	t_philos	*ph;
