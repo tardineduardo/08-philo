@@ -5,25 +5,24 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/28 16:09:51 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 22:01:13 by eduribei         ###   ########.fr       */
+/*   Created: 2025/01/02 11:36:30 by eduribei          #+#    #+#             */
+/*   Updated: 2025/01/02 12:30:49 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	philo_grab_fork_1(t_philos *philo, t_params *params)
+bool	ft_grab_fork_1(t_philos *philo, t_params *params)
 {
-	size_t	timedelta;
+	t_timeval	now;
+	size_t		timedelta;
 
-	if (ft_stop(philo, params))
+	if (ft_stop(params))
 		return (false);
 	pthread_mutex_lock(philo->fork1);
-	pthread_mutex_lock(params->meal_mutex);
-	gettimeofday(&philo->curr_time, NULL);
-	timedelta = ft_t_delta_ms(params->start_time, philo->curr_time);
-	pthread_mutex_unlock(params->meal_mutex);
-	if (ft_stop(philo, params))
+	gettimeofday(&now, NULL);
+	timedelta = ft_t_delta_ms(params->start_time, now);
+	if (ft_stop(params))
 	{
 		pthread_mutex_unlock(philo->fork1);
 		return (false);
@@ -34,21 +33,20 @@ bool	philo_grab_fork_1(t_philos *philo, t_params *params)
 	return (true);
 }
 
-bool	philo_grab_fork_2(t_philos *philo, t_params *params)
+bool	ft_grab_fork_2(t_philos *philo, t_params *params)
 {
-	size_t	timedelta;
+	t_timeval	now;
+	size_t		timedelta;
 
-	if (ft_stop(philo, params))
+	if (ft_stop(params))
 	{
 		pthread_mutex_unlock(philo->fork1);
 		return (false);
 	}
 	pthread_mutex_lock(philo->fork2);
-	pthread_mutex_lock(params->meal_mutex);
-	gettimeofday(&philo->curr_time, NULL);
-	timedelta = ft_t_delta_ms(params->start_time, philo->curr_time);
-	pthread_mutex_unlock(params->meal_mutex);
-	if (ft_stop(philo, params))
+	gettimeofday(&now, NULL);
+	timedelta = ft_t_delta_ms(params->start_time, now);
+	if (ft_stop(params))
 	{
 		pthread_mutex_unlock(philo->fork1);
 		pthread_mutex_unlock(philo->fork2);
@@ -60,68 +58,62 @@ bool	philo_grab_fork_2(t_philos *philo, t_params *params)
 	return (true);
 }
 
-bool	philo_eating(t_philos *philo, t_params *params)
+bool	ft_eating(t_philos *philo, t_params *params)
 {
-	size_t	timedelta;
+	t_timeval	now;
+	size_t		timedelta;
 
-	if (ft_stop(philo, params))
+	if (ft_stop(params))
 	{
 		pthread_mutex_unlock(philo->fork2);
 		pthread_mutex_unlock(philo->fork1);
 		return (false);
 	}
-	gettimeofday(&philo->curr_time, NULL);
-	timedelta = ft_t_delta_ms(params->start_time, philo->curr_time);
+	gettimeofday(&now, NULL);
+	timedelta = ft_t_delta_ms(params->start_time, now);
 	pthread_mutex_lock(params->print_mutex);
 	printf("%li %li is eating\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
-	pthread_mutex_lock(params->meal_mutex);
-	gettimeofday(&philo->t_of_last_meal, NULL);
-	pthread_mutex_unlock(params->meal_mutex);
-	usleep(params->time_eating);
+	gettimeofday(&philo->tm_lastmeal, NULL);
+	usleep(params->tm_eat);
 	pthread_mutex_unlock(philo->fork1);
 	pthread_mutex_unlock(philo->fork2);
-	pthread_mutex_lock(params->meal_mutex);
-	philo->number_of_meals_had += 1;
-	pthread_mutex_unlock(params->meal_mutex);
-	if (philo->number_of_meals_had == params->number_of_meals_to_eat)
+	if (ft_update_meal_count(philo, params) == 5)
 		return (false);
 	return (true);
 }
 
-bool	philo_sleeping(t_philos *philo, t_params *params)
+bool	ft_sleeping(t_philos *philo, t_params *params)
 {
-	size_t	timedelta;
+	t_timeval	now;
+	size_t		timedelta;
 
-	if (ft_stop(philo, params))
+	if (ft_stop(params))
 		return (false);
-	pthread_mutex_lock(params->meal_mutex);
-	gettimeofday(&philo->curr_time, NULL);
-	timedelta = ft_t_delta_ms(params->start_time, philo->curr_time);
-	pthread_mutex_unlock(params->meal_mutex);
+	gettimeofday(&now, NULL);
+	timedelta = ft_t_delta_ms(params->start_time, now);
 	pthread_mutex_lock(params->print_mutex);
 	printf("%li %li is sleeping\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
-	usleep(params->time_sleeping);
+	usleep(params->tm_sleep);
 	return (true);
 }
 
-bool	philo_thinking(t_philos *philo, t_params *params)
+bool	ft_thinking(t_philos *philo, t_params *params)
 {
-	size_t	timedelta;
-
-	if (ft_stop(philo, params))
+	t_timeval	now;
+	size_t		timedelta;
+	
+	if (ft_stop(params))
 		return (false);
-	pthread_mutex_lock(params->meal_mutex);
-	gettimeofday(&philo->curr_time, NULL);
-	timedelta = ft_t_delta_ms(params->start_time, philo->curr_time);
-	pthread_mutex_unlock(params->meal_mutex);
+	gettimeofday(&now, NULL);
+	timedelta = ft_t_delta_ms(params->start_time, now);
 	pthread_mutex_lock(params->print_mutex);
 	printf("%li %li is thinking\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
 	if (philo->index % 2 == 0)
-		usleep(2000);
+		usleep(100);
 	else
-		usleep(500);
+		usleep(50);
 	return (true);
 }

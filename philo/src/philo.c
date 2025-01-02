@@ -12,10 +12,10 @@
 
 #include "philo.h"
 
-bool	ft_stop(t_philos *philo, t_params *params)
+bool	ft_stop(t_params *params)
 {
 	pthread_mutex_lock(params->stop_mutex);
-	if (params->is_someone_dead)
+	if (params->must_stop)
 	{
 		pthread_mutex_unlock(params->stop_mutex);
 		return (true);
@@ -26,35 +26,35 @@ bool	ft_stop(t_philos *philo, t_params *params)
 
 void	*ft_philo(void *args)
 {
-	t_philos	*philo;
+	t_philos	*ph;
 	t_params	*params;
 
-	philo = (t_philos *)args;
-	params = philo->main->params;
-	if (philo->index % 2 == 1)
-		usleep(params->time_eating / 2);
+	ph = (t_philos *)args;
+	params = ph->main->params;
+	if (ph->index % 2 == 1)
+		usleep(params->tm_eat / 2);
 	while (1)
 	{
-		if (!philo_grab_fork_1(philo, params))
+		if (!ft_grab_fork_1(ph, params))
 			return (NULL);
-		if (!philo_grab_fork_2(philo, params))
+		if (!ft_grab_fork_2(ph, params))
 			return (NULL);
-		if (!philo_eating(philo, params))
+		if (!ft_eating(ph, params))
 			return (NULL);
-		if (!philo_sleeping(philo, params))
+		if (!ft_sleeping(ph, params))
 			return (NULL);
-		if (!philo_thinking(philo, params))
+		if (!ft_thinking(ph, params))
 			return (NULL);
 	}
 	return (NULL);
 }
 
-void	ft_join_threads(t_resources *main)
+void	ft_join_threads(t_main *main)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (i < main->params->number_of_philos)
+	while (i < main->params->nb_philos)
 	{
 		pthread_join(main->th[i], NULL);
 		i++;
@@ -63,22 +63,16 @@ void	ft_join_threads(t_resources *main)
 
 int	main(int argc, char *argv[])
 {
-	t_resources	*main;
+	t_main	*main;
 
-	main = malloc(sizeof(t_resources));
+	main = malloc(sizeof(t_main));
 	if (!main)
 		ft_error("malloc failed.\n", main);
 	ft_validate_args(argc, argv, main);
 	ft_alloc_resources(main);
 	ft_init_mutexes(main);
 	ft_init_threads(main);
-
 	ft_join_threads(main);
-	pthread_join(main->monitor, NULL);
 	ft_free_resources(main);
 	return (0);
 }
-
-
-
-	// Create monitor thread before philosopher threads
