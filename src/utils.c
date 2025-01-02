@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 18:39:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 21:33:58 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/01 22:18:03 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,6 @@ int	ft_atoi(const char *nptr)
 	return (nb * sign);
 }
 
-void	ft_alloc_resources(t_resources *main)
-{
-	t_params	*params;
-
-	params = main->params;
-	params->is_someone_dead = false;
-	gettimeofday(&params->start_time, NULL);
-	main->forks = calloc(params->nb_of_forks + 1, sizeof(pthread_mutex_t));
-	main->th = calloc(params->number_of_philos, sizeof(pthread_t));
-	main->philo = calloc(params->number_of_philos, sizeof(t_philos));
-	main->stop_mutex = calloc(1, sizeof(pthread_mutex_t));
-	main->print_mutex = calloc(1, sizeof(pthread_mutex_t));
-    main->meal_mutex = calloc(1, sizeof(pthread_mutex_t));
-	if (!main->forks || !main->th || !main->philo || !main->print_mutex || !main->meal_mutex)
-	{
-		printf("malloc error.\n");
-		ft_free_resources(main);
-		exit(1);
-	}
-	return ;
-}
-
 // FREE RESOURCES WHEN ONLY WHEN THREADS RETURN.
 void	ft_free_resources(t_resources *main)
 {
@@ -73,21 +51,6 @@ void	ft_free_resources(t_resources *main)
 		free(main->philo);
 	if (main->params)
 		free(main->params);
-	if (main->stop_mutex)
-	{
-		pthread_mutex_destroy(main->stop_mutex);
-		free(main->stop_mutex);
-	}
-	if (main->print_mutex)
-	{
-		pthread_mutex_destroy(main->print_mutex);
-		free(main->print_mutex);
-	}
-	if (main->meal_mutex)
-	{
-    	pthread_mutex_destroy(main->meal_mutex);
-    	free(main->meal_mutex);
-	}	
 	free(main);
 	return ;
 }

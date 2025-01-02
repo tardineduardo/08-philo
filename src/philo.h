@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 21:26:39 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/01 23:14:54 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,20 @@ typedef struct timeval	timeval;
 
 typedef struct s_params
 {
-	size_t			number_of_philos;
-	size_t			nb_of_forks;
+	size_t			nb_philos;
+	size_t			nb_forks;
 	size_t			time_sleeping;
 	size_t			time_to_die;
 	size_t			time_eating;
 	size_t			number_of_meals_to_eat;
+	size_t			total_meals_count;
+	size_t			total_meals_goal;
 	timeval			start_time;
-	bool			stop;
-	bool			is_someone_dead;
+	//bool			stop;
+	bool			must_stop;
 	pthread_mutex_t	*stop_mutex;
 	pthread_mutex_t	*print_mutex;
-	pthread_mutex_t	*meal_mutex;	
+	pthread_mutex_t	*meal_mutex;
 }	t_params;
 
 typedef struct s_philos
@@ -55,9 +57,9 @@ typedef struct s_resources
 	pthread_t		*th;
 	pthread_t		monitor;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*stop_mutex;
-	pthread_mutex_t	*print_mutex;
-	pthread_mutex_t	*meal_mutex;
+	pthread_mutex_t	stop_mutex;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	meal_mutex;
 	t_philos		*philo;
 	t_params		*params;
 }	t_resources;
@@ -92,7 +94,7 @@ void	ft_error(char *message, t_resources *main);
 
 size_t	ft_t_delta_ms(timeval start, timeval end);
 size_t	ft_t_delta_us(timeval start, timeval end);
-void	*death_monitor(void *arg);
+void	*stop_monitor(void *arg);
 
 
 # define RESET   "\033[0m"

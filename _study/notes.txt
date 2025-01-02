@@ -1,11 +1,11 @@
 arg 0 - ./philo 
-arg 1 - number_of_philos
+arg 1 - nb_philos
 arg 2 - time_to_die
 arg 3 - time_to_eat
 arg 4 - time_to_sleep
 arg 5 - number_of_meals
 
-number_of_philos
+nb_philos
 The number of philosophers and also the number of forks.
 
 time_to_die
@@ -23,7 +23,7 @@ The time a philosopher will spend sleeping.
 number_of_meals
 If all philosophers have eaten at least "number_of_meals" times, the simulation stops. If not specified, the simulation stops when a philosopher dies.
 
->>> Each philosopher has a number ranging from 1 to number_of_philosophers.
+>>> Each philosopher has a number ranging from 1 to nb_philosophers.
 
 >>> Any state change of a philosopher must be formatted as follows. Replace timestamp_in_ms with the current timestamp in milliseconds and X with the philosopher number.
 - timestamp_in_ms X has taken a fork

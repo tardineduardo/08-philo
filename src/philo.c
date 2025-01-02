@@ -15,7 +15,7 @@
 bool	ft_stop(t_philos *philo, t_params *params)
 {
 	pthread_mutex_lock(params->stop_mutex);
-	if (params->is_someone_dead)
+	if (params->must_stop)
 	{
 		pthread_mutex_unlock(params->stop_mutex);
 		return (true);
@@ -54,7 +54,7 @@ void	ft_join_threads(t_resources *main)
 	int	i;
 
 	i = 0;
-	while (i < main->params->number_of_philos)
+	while (i < main->params->nb_philos)
 	{
 		pthread_join(main->th[i], NULL);
 		i++;
@@ -74,7 +74,7 @@ int	main(int argc, char *argv[])
 	ft_init_threads(main);
 
 	ft_join_threads(main);
-	pthread_join(main->monitor, NULL);
+	// pthread_join(main->monitor, NULL);
 	ft_free_resources(main);
 	return (0);
 }

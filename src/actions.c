@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:09:51 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 22:01:13 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 00:28:16 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,15 @@ bool	philo_eating(t_philos *philo, t_params *params)
 	pthread_mutex_unlock(philo->fork2);
 	pthread_mutex_lock(params->meal_mutex);
 	philo->number_of_meals_had += 1;
+	params->total_meals_count += 1;
 	pthread_mutex_unlock(params->meal_mutex);
 	if (philo->number_of_meals_had == params->number_of_meals_to_eat)
+	{
+		pthread_mutex_lock(params->print_mutex);
+		printf(BLUE "--- %li had all %li meals! \n" RESET, philo->index + 1, params->number_of_meals_to_eat);
+		pthread_mutex_unlock(params->print_mutex);
 		return (false);
+	}
 	return (true);
 }
 
@@ -120,8 +126,8 @@ bool	philo_thinking(t_philos *philo, t_params *params)
 	printf("%li %li is thinking\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
 	if (philo->index % 2 == 0)
-		usleep(2000);
+		usleep(10);
 	else
-		usleep(500);
+		usleep(1);
 	return (true);
 }
