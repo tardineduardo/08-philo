@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:11:14 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 20:37:59 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/01 21:50:15 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,8 @@ void	ft_assign_forks(t_philos *philo)
 
 	i = philo->index;
 	n = philo->main->params->number_of_philos;
-	if (i == 0)
-	{
-		philo->fork1 = &philo->main->forks[0];
-		philo->fork2 = &philo->main->forks[1];
-	}
-	else if (i == n - 1)
+
+	if (i == n - 1)
 	{
 		philo->fork1 = &philo->main->forks[0];
 		philo->fork2 = &philo->main->forks[i];
@@ -34,7 +30,6 @@ void	ft_assign_forks(t_philos *philo)
 		philo->fork1 = &philo->main->forks[i];
 		philo->fork2 = &philo->main->forks[i + 1];
 	}
-	return ;
 }
 
 void	ft_init_threads(t_resources *main)
@@ -49,9 +44,12 @@ void	ft_init_threads(t_resources *main)
 		main->philo[i].main = main;
 		main->philo[i].t_of_last_meal = main->params->start_time;
 		ft_assign_forks(&main->philo[i]);
-		pthread_create(&main->th[i], NULL, &ft_philo, (void *)&main->philo[i]);
+		if (pthread_create(&main->th[i], NULL, &ft_philo, (void *)&main->philo[i]) != 0)
+			ft_error("Failed to create philosopher thread.\n", main);
 		i++;
 	}
+	if (pthread_create(&main->monitor, NULL, &death_monitor, main) != 0)
+		ft_error("Failed to create monitor thread.\n", main);
 	return ;
 }
 
@@ -64,7 +62,9 @@ void	ft_init_mutexes(t_resources *r)
 		pthread_mutex_init(&r->forks[a++], NULL);
 	pthread_mutex_init(r->stop_mutex, NULL);
 	pthread_mutex_init(r->print_mutex, NULL);
+	pthread_mutex_init(r->meal_mutex, NULL);
 	r->params->stop_mutex = r->stop_mutex;
 	r->params->print_mutex = r->print_mutex;
+	r->params->meal_mutex = r->meal_mutex;
 	return ;
 }

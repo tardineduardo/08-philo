@@ -1,39 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   allocs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/25 18:39:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/01 21:33:58 by eduribei         ###   ########.fr       */
+/*   Created: 2025/01/01 22:07:21 by eduribei          #+#    #+#             */
+/*   Updated: 2025/01/01 22:07:35 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	ft_atoi(const char *nptr)
-{
-	int	nb;
-	int	sign;
-
-	nb = 0;
-	sign = 1;
-	while (*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r'))
-		nptr++;
-	if (*nptr == '-' || *nptr == '+')
-	{
-		if (*nptr == '-')
-			sign = -1;
-		nptr++;
-	}
-	while (*nptr >= '0' && *nptr <= '9')
-	{
-		nb = nb * 10 + (*nptr - '0');
-		nptr++;
-	}
-	return (nb * sign);
-}
 
 void	ft_alloc_resources(t_resources *main)
 {
@@ -56,47 +33,3 @@ void	ft_alloc_resources(t_resources *main)
 	}
 	return ;
 }
-
-// FREE RESOURCES WHEN ONLY WHEN THREADS RETURN.
-void	ft_free_resources(t_resources *main)
-{
-	if (!main)
-		return ;
-	if (main->th)
-		free(main->th);
-	if (main->forks)
-	{
-		//ft pthread_mutex_destroy(...)
-		free(main->forks);
-	}
-	if (main->philo)
-		free(main->philo);
-	if (main->params)
-		free(main->params);
-	if (main->stop_mutex)
-	{
-		pthread_mutex_destroy(main->stop_mutex);
-		free(main->stop_mutex);
-	}
-	if (main->print_mutex)
-	{
-		pthread_mutex_destroy(main->print_mutex);
-		free(main->print_mutex);
-	}
-	if (main->meal_mutex)
-	{
-    	pthread_mutex_destroy(main->meal_mutex);
-    	free(main->meal_mutex);
-	}	
-	free(main);
-	return ;
-}
-
-void	ft_error(char *message, t_resources *r)
-{
-	printf("Error: %s", message);
-	ft_free_resources(r);
-	exit(1);
-}
-
-
