@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 11:36:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 19:41:46 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:30:34 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,6 @@ bool	ft_thinking(t_philos *philo, t_params *params)
 	pthread_mutex_lock(params->print_mutex);
 	printf("%li %li is thinking\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
-	if (philo->index % 2 == 0)
-		usleep(1000);
-	else
-		usleep(500);
+	usleep(10);	
 	return (true);
 }

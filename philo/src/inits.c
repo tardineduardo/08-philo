@@ -6,15 +6,11 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:11:14 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 19:33:57 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:28:39 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-
-
-
 
 void	ft_assign_forks(t_philos *philo)
 {
@@ -23,12 +19,7 @@ void	ft_assign_forks(t_philos *philo)
 
 	i = philo->index;
 	n = philo->main->params->nb_philos;
-	if (n == 1)
-	{
-		philo->fork1 = &philo->main->forks[0];
-		philo->fork2 = NULL;
-	}
-	else if (i == n - 1)
+	if (i == n - 1)
 	{
 		philo->fork1 = &philo->main->forks[0];
 		philo->fork2 = &philo->main->forks[i];
@@ -59,8 +50,6 @@ void	ft_init_threads(t_main *m)
 	}
 	if (pthread_create(&m->monitor, NULL, &stop_monitor, m) != 0)
 		ft_error("Failed to create monitor thread.\n", m);
-	// if (pthread_create(&m->join, NULL, &ft_join, m) != 0)
-	// 	ft_error("Failed to create monitor thread.\n", m);	
 	return ;
 }
 
