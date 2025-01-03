@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 13:00:25 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 21:21:13 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,19 @@ typedef struct s_params
 	pthread_mutex_t	*stop_mutex;
 	pthread_mutex_t	*print_mutex;
 	pthread_mutex_t	*meal_mutex;
+	pthread_mutex_t	*time_mutex;
+	pthread_mutex_t	*detached_mutex;
 }	t_params;
 
 typedef struct s_philos
 {
+	bool				is_detached;
 	size_t				index;
-	pthread_mutex_t		*fork1;
-	pthread_mutex_t		*fork2;
 	size_t				nb_meals_had;
 	size_t				tm_starv;
 	t_timeval			tm_lastmeal;
+	pthread_mutex_t		*fork1;
+	pthread_mutex_t		*fork2;
 	struct s_main		*main;
 }	t_philos;
 
@@ -55,10 +58,13 @@ typedef struct s_main
 {
 	pthread_t		*th;
 	pthread_t		monitor;
+	pthread_t		join;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	stop_mutex;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	meal_mutex;
+	pthread_mutex_t	time_mutex;
+	pthread_mutex_t	detached_mutex;
 	t_philos		*ph;
 	t_params		*params;
 }	t_main;
@@ -90,6 +96,7 @@ void	ft_free_resources(t_main *main);
 //Error
 void	ft_error(char *message, t_main *main);
 
+void	ft_get_time(t_timeval *timeval, pthread_mutex_t *mutex);
 size_t	ft_t_delta_ms(t_timeval start, t_timeval end);
 size_t	ft_t_delta_us(t_timeval start, t_timeval end);
 void	*stop_monitor(void *arg);

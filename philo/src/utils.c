@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 18:39:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 12:59:35 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 15:22:18 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,30 +35,10 @@ int	ft_atoi(const char *nptr)
 	return (nb * sign);
 }
 
-// FREE RESOURCES WHEN ONLY WHEN THREADS RETURN.
-void	ft_free_resources(t_main *main)
-{
-	if (!main)
-		return ;
-	if (main->th)
-		free(main->th);
-	if (main->forks)
-	{
-		//ft pthread_mutex_destroy(...)
-		free(main->forks);
-	}
-	if (main->ph)
-		free(main->ph);
-	if (main->params)
-		free(main->params);
-	free(main);
-	return ;
-}
-
-void	ft_error(char *message, t_main *r)
+void	ft_error(char *message, t_main *main)
 {
 	printf("Error: %s", message);
-	ft_free_resources(r);
+	ft_free_resources(main);
 	exit(1);
 }
 
