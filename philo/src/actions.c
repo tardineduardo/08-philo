@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 11:36:30 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 21:35:42 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/03 13:19:17 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ bool	ft_eating(t_philos *philo, t_params *params)
 	ft_get_time(&now, params->time_mutex);
 	timedelta = ft_t_delta_ms(params->start_time, now);
 	pthread_mutex_lock(params->print_mutex);
-	printf("%li %li is eating\n", timedelta, philo->index + 1);
+	printf(GREEN "%li %li is eating\n" RST, timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
 	ft_get_time(&philo->tm_lastmeal, params->time_mutex);
 	usleep(params->tm_eat);
@@ -120,7 +120,7 @@ bool	ft_thinking(t_philos *philo, t_params *params)
 	if (think_time > params->tm_eat)
 		think_time = params->tm_eat / 2;
 	if (think_time < 1000)
-		think_time = 1000;
+		think_time = 100;
 	usleep(think_time);
 	return (true);
 }

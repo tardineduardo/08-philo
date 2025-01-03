@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 18:39:36 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 15:22:18 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/03 12:24:09 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,23 @@ int	ft_atoi(const char *nptr)
 	return (nb * sign);
 }
 
-void	ft_error(char *message, t_main *main)
+void	ft_error(char *message, int errnum, t_main *main)
 {
 	printf("Error: %s", message);
 	ft_free_resources(main);
-	exit(1);
+	exit(errnum);
 }
 
-bool	ft_thread_must_stop(t_params *params)
+int	ft_isdigit(int c)
 {
-	pthread_mutex_lock(params->stop_mutex);
-	if (params->must_stop)
-	{
-		pthread_mutex_unlock(params->stop_mutex);
-		return (true);
-	}
-	pthread_mutex_unlock(params->stop_mutex);
-	return (false);
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
+int	ft_isspace(int c)
+{
+	if (c == ' ' || c == '\t')
+		return (1);
+	return (0);
 }

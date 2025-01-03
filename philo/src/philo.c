@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+static void	ft_join_threads(t_main *main)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < main->params->nb_philos)
+	{
+		pthread_join(main->th[i], NULL);
+		i++;
+	}
+	pthread_join(main->monitor, NULL);
+}
+
 void	*ft_philo(void *args)
 {
 	t_philos	*ph;
@@ -39,27 +52,15 @@ void	*ft_philo(void *args)
 	return (NULL);
 }
 
-void	ft_join_threads(t_main *main)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < main->params->nb_philos)
-	{
-		pthread_join(main->th[i], NULL);
-		i++;
-	}
-	pthread_join(main->monitor, NULL);
-}
-
 int	main(int argc, char *argv[])
 {
 	t_main	*main;
 
 	main = malloc(sizeof(t_main));
 	if (!main)
-		ft_error("malloc failed.\n", main);
-	ft_validate_args(argc, argv, main);
+		ft_error("malloc failed.\n", errno, main);
+	ft_init_main(main);
+	ft_validate_and_parse_args(argc, argv, main);
 	ft_alloc_resources(main);
 	ft_init_mutexes(main);
 	ft_init_threads(main);

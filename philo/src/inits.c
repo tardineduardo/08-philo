@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:11:14 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 21:59:50 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/03 12:39:35 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ void	ft_init_threads(t_main *m)
 		m->ph[i].tm_lastmeal = m->params->start_time;
 		ft_assign_forks(&m->ph[i]);
 		if (pthread_create(&m->th[i], NULL, &ft_philo, (void *)&m->ph[i]) != 0)
-			ft_error("Failed to create philosopher thread.\n", m);
+			ft_error("Failed to create philosopher thread.\n", errno, m);
 		i++;
 	}
 	if (pthread_create(&m->monitor, NULL, &ft_stop_monitor, m) != 0)
-		ft_error("Failed to create monitor thread.\n", m);
+		ft_error("Failed to create monitor thread.\n", errno, m);
 	return ;
 }
 
@@ -71,5 +71,14 @@ void	ft_init_mutexes(t_main *main)
 	main->params->print_mutex = &main->print_mutex;
 	main->params->meal_mutex = &main->meal_mutex;
 	main->params->time_mutex = &main->time_mutex;
+	return ;
+}
+
+void	ft_init_main(t_main *main)
+{
+	main->th = NULL;
+	main->forks = NULL;
+	main->ph = NULL;
+	main->params = NULL;
 	return ;
 }

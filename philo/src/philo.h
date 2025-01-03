@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 21:21:13 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/03 13:27:26 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/time.h>
 # include <stdbool.h>
 # include <limits.h>
+# include <errno.h>
 
 typedef struct timeval	t_timeval;
 
@@ -33,13 +34,12 @@ typedef struct s_params
 	size_t			nb_meals_to_eat;
 	size_t			total_meals_ct;
 	size_t			total_meals_goal;
-	bool			must_stop;
+	bool			thread_must_stop;
 	t_timeval		start_time;
 	pthread_mutex_t	*stop_mutex;
 	pthread_mutex_t	*print_mutex;
 	pthread_mutex_t	*meal_mutex;
 	pthread_mutex_t	*time_mutex;
-	pthread_mutex_t	*detached_mutex;
 }	t_params;
 
 typedef struct s_philos
@@ -69,10 +69,13 @@ typedef struct s_main
 }	t_main;
 
 //Validation
+void	ft_validate_and_parse_args(int argc, char *argv[], t_main *main);
 int		ft_atoi(const char *nptr);
-void	ft_validate_args(int argc, char *argv[], t_main *main);
+int		ft_isdigit(int c);
+int		ft_isspace(int c);
 
 //Inits
+void	ft_init_main(t_main *main);
 void	ft_init_threads(t_main *main);
 void	ft_init_mutexes(t_main *main);
 void	ft_alloc_resources(t_main *main);
@@ -87,28 +90,23 @@ bool	ft_eating(t_philos *philo, t_params *params);
 bool	ft_sleeping(t_philos *philo, t_params *params);
 bool	ft_thinking(t_philos *philo, t_params *params);
 
-//exiting
+//Monitor
+void	*ft_stop_monitor(void *arg);
 bool	ft_thread_must_stop(t_params *params);
-void	ft_join_threads(t_main *main);
+
+//Exiting
 void	ft_free_resources(t_main *main);
 
 //Error
-void	ft_error(char *message, t_main *main);
+void	ft_error(char *message, int errnum, t_main *main);
 
+//Time
 void	ft_get_time(t_timeval *timeval, pthread_mutex_t *mutex);
 size_t	ft_t_delta_ms(t_timeval start, t_timeval end);
 size_t	ft_t_delta_us(t_timeval start, t_timeval end);
-void	*ft_stop_monitor(void *arg);
 
-# define RESET   "\033[0m"
-# define RED     "\033[31m"
-# define GREY	"\033[90m"
-# define GREEN   "\033[32m"
-# define YELLOW  "\033[33m"
-# define BLUE    "\033[34m"
-# define MAGENTA "\033[35m"
-# define CYAN    "\033[36m"
-# define WHITE   "\033[37m"
-# define BRIGHT_GREEN "\033[92m"
+# define RST	"\033[0m"
+# define GREEN	"\033[32m"
+# define RED	"\033[31m"
 
 #endif
