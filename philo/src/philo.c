@@ -44,8 +44,7 @@ void	ft_join_threads(t_main *main)
 	i = 0;
 	while (i < main->params->nb_philos)
 	{
-		if (!main->ph[i].is_detached)
-			pthread_join(main->th[i], NULL);
+		pthread_join(main->th[i], NULL);
 		i++;
 	}
 	pthread_join(main->monitor, NULL);

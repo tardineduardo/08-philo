@@ -19,13 +19,7 @@ void	ft_assign_forks(t_philos *philo)
 
 	i = philo->index;
 	n = philo->main->params->nb_philos;
-	
-	if (i == 0)
-	{
-		philo->fork1 = &philo->main->forks[i];
-		philo->fork2 = NULL;
-	}
-	else if (i == n - 1)
+	if (i == n - 1 && n != 1)
 	{
 		philo->fork1 = &philo->main->forks[0];
 		philo->fork2 = &philo->main->forks[i];
@@ -35,6 +29,9 @@ void	ft_assign_forks(t_philos *philo)
 		philo->fork1 = &philo->main->forks[i];
 		philo->fork2 = &philo->main->forks[i + 1];
 	}
+	if (n == 1)
+		philo->fork2 = NULL;
+	return ;
 }
 
 void	ft_init_threads(t_main *m)
@@ -64,17 +61,15 @@ void	ft_init_mutexes(t_main *main)
 	size_t	a;
 
 	a = 0;
-	while (a < main->params->nb_philos + 1)
+	while (a < main->params->nb_philos)
 		pthread_mutex_init(&main->forks[a++], NULL);
 	pthread_mutex_init(&main->stop_mutex, NULL);
 	pthread_mutex_init(&main->print_mutex, NULL);
 	pthread_mutex_init(&main->meal_mutex, NULL);
 	pthread_mutex_init(&main->time_mutex, NULL);
-	pthread_mutex_init(&main->detached_mutex, NULL);
 	main->params->stop_mutex = &main->stop_mutex;
 	main->params->print_mutex = &main->print_mutex;
 	main->params->meal_mutex = &main->meal_mutex;
 	main->params->time_mutex = &main->time_mutex;
-	main->params->detached_mutex = &main->detached_mutex;
 	return ;
 }

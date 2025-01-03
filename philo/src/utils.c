@@ -35,13 +35,10 @@ int	ft_atoi(const char *nptr)
 	return (nb * sign);
 }
 
-// FREE RESOURCES WHEN ONLY WHEN THREADS RETURN.
-
-
-void	ft_error(char *message, t_main *r)
+void	ft_error(char *message, t_main *main)
 {
 	printf("Error: %s", message);
-	ft_free_resources(r);
+	ft_free_resources(main);
 	exit(1);
 }
 
