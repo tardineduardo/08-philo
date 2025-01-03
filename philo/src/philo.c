@@ -48,6 +48,7 @@ void	ft_join_threads(t_main *main)
 			pthread_join(main->th[i], NULL);
 		i++;
 	}
+	pthread_join(main->monitor, NULL);
 }
 
 int	main(int argc, char *argv[])
@@ -63,7 +64,5 @@ int	main(int argc, char *argv[])
 	ft_init_threads(main);
 	ft_join_threads(main);
 	ft_free_resources(main);
-	ft_destroy_mutexes(main);
-	free(main);
 	return (0);
 }

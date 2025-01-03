@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 15:01:25 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 20:36:44 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 21:21:13 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ bool	ft_thinking(t_philos *philo, t_params *params);
 bool	ft_thread_must_stop(t_params *params);
 void	ft_join_threads(t_main *main);
 void	ft_free_resources(t_main *main);
-void	ft_destroy_mutexes(t_main *main);
-
 
 //Error
 void	ft_error(char *message, t_main *main);

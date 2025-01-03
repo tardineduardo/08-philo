@@ -58,7 +58,7 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": ["1", "800", "200", "200"],
+      "args": ["4", "800", "200", "200", "3"],
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/nfs/homes/eduribei/Documentos/repos/08-philo/philo/src",

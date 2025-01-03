@@ -6,7 +6,7 @@
 /*   By: eduribei <eduribei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 20:42:56 by eduribei          #+#    #+#             */
-/*   Updated: 2025/01/02 20:32:37 by eduribei         ###   ########.fr       */
+/*   Updated: 2025/01/02 21:46:56 by eduribei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static bool	ft_total_meals_are_complete(t_main *main)
 		main->params->must_stop = true;
 		pthread_mutex_unlock(&main->stop_mutex);
 		pthread_mutex_unlock(&main->meal_mutex);
-		pthread_detach(main->monitor);
+		//pthread_detach(main->monitor);
 		return (true);
 	}
 	pthread_mutex_unlock(&main->meal_mutex);
@@ -43,8 +43,16 @@ static bool	ft_philosopher_has_died(size_t index, t_main *main)
 		pthread_mutex_lock(&main->print_mutex);
 		printf("%li %li died\n", timedelta, main->ph[index].index + 1);
 		pthread_mutex_unlock(&main->stop_mutex);
+
+		//detach
 		pthread_mutex_unlock(&main->print_mutex);
-		pthread_detach(main->monitor);
+		pthread_mutex_lock(&main->detached_mutex);
+		main->ph[index].is_detached = true;
+		pthread_detach(main->th[index]);
+		pthread_mutex_unlock(&main->detached_mutex);
+
+
+//		pthread_detach(main->monitor);
 		return (true);
 	}
 	pthread_mutex_unlock(&main->stop_mutex);
@@ -56,19 +64,33 @@ void	*stop_monitor(void *arg)
 	t_main		*main;
 	size_t		philo_index;
 
+	int check = 1;
+
 	main = (t_main *)arg;
 	while (1)
 	{
+		pthread_mutex_lock(&main->print_mutex);
+		printf("check %i\n", check);
+		pthread_mutex_unlock(&main->print_mutex);
+
 		philo_index = 0;
 		while (philo_index < main->params->nb_philos)
 		{
 			if (ft_philosopher_has_died(philo_index, main))
+			{
+				pthread_mutex_lock(&main->print_mutex);
+				printf("stop_monitor about to return");
+				pthread_mutex_unlock(&main->print_mutex);
+
 				return (NULL);
+			}
 			if (ft_total_meals_are_complete(main))
 				return (NULL);
 			philo_index++;
+			philo_index++;
 		}
-		usleep(1000);
+		usleep(50000);
+		check++;
 	}
 	return (NULL);
 }
