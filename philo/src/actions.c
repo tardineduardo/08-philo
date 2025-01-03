@@ -116,7 +116,7 @@ bool	ft_thinking(t_philos *philo, t_params *params)
 	pthread_mutex_lock(params->print_mutex);
 	printf("%li %li is thinking\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
-	think_time = (params->tm_die - philo->tm_starv) / 2;      //DATA RACE!!!!
+	think_time = (params->tm_die - philo->tm_starv) / 2;
 	if (think_time > params->tm_eat)
 		think_time = params->tm_eat / 2;
 	if (think_time < 1000)
