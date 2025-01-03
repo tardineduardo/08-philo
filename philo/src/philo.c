@@ -19,8 +19,10 @@ void	*ft_philo(void *args)
 
 	ph = (t_philos *)args;
 	params = ph->main->params;
-	if (ph->index % 2 == 1)
-		usleep(params->tm_eat / 3);
+	if (ph->index % 2 == 0)
+		usleep(params->tm_eat / 2);
+	else if (params->nb_philos % 2 == 1 && ph->index == params->nb_philos - 1)
+		usleep(params->tm_eat * 3 / 4);
 	while (1)
 	{
 		if (!ft_grab_fork_1(ph, params))

@@ -48,8 +48,8 @@ bool	ft_grab_fork_2(t_philos *philo, t_params *params)
 	timedelta = ft_t_delta_ms(params->start_time, now);
 	if (ft_thread_must_stop(params))
 	{
-		pthread_mutex_unlock(philo->fork1);
 		pthread_mutex_unlock(philo->fork2);
+		pthread_mutex_unlock(philo->fork1);
 		return (false);
 	}
 	pthread_mutex_lock(params->print_mutex);
@@ -65,8 +65,8 @@ bool	ft_eating(t_philos *philo, t_params *params)
 
 	if (ft_thread_must_stop(params))
 	{
-		pthread_mutex_unlock(philo->fork1);
 		pthread_mutex_unlock(philo->fork2);
+		pthread_mutex_unlock(philo->fork1);
 		return (false);
 	}
 	ft_get_time(&now, params->time_mutex);
@@ -76,8 +76,8 @@ bool	ft_eating(t_philos *philo, t_params *params)
 	pthread_mutex_unlock(params->print_mutex);
 	ft_get_time(&philo->tm_lastmeal, params->time_mutex);
 	usleep(params->tm_eat);
-	pthread_mutex_unlock(philo->fork1);
 	pthread_mutex_unlock(philo->fork2);
+	pthread_mutex_unlock(philo->fork1);
 	pthread_mutex_lock(params->meal_mutex);
 	philo->nb_meals_had += 1;
 	params->total_meals_ct += 1;
@@ -107,6 +107,7 @@ bool	ft_thinking(t_philos *philo, t_params *params)
 {
 	t_timeval	now;
 	size_t		timedelta;
+	size_t		think_time;
 
 	if (ft_thread_must_stop(params))
 		return (false);
@@ -115,6 +116,11 @@ bool	ft_thinking(t_philos *philo, t_params *params)
 	pthread_mutex_lock(params->print_mutex);
 	printf("%li %li is thinking\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
-	usleep(1000);
+	think_time = (params->tm_die - philo->tm_starv) / 2;      //DATA RACE!!!!
+	if (think_time > params->tm_eat)
+		think_time = params->tm_eat / 2;
+	if (think_time < 1000)
+		think_time = 1000;
+	usleep(think_time);
 	return (true);
 }

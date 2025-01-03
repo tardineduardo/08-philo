@@ -66,7 +66,7 @@ void	*ft_stop_monitor(void *arg)
 				return (NULL);
 			philo_index++;
 		}
-		usleep(1000);
+		usleep(2000);
 	}
 	return (NULL);
 }

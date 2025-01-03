@@ -47,7 +47,7 @@ typedef struct s_philos
 	bool				is_detached;
 	size_t				index;
 	size_t				nb_meals_had;
-	size_t				tm_starv;
+	_Atomic size_t		tm_starv;
 	t_timeval			tm_lastmeal;
 	pthread_mutex_t		*fork1;
 	pthread_mutex_t		*fork2;
