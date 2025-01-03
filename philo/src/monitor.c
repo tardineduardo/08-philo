@@ -49,7 +49,7 @@ static bool	ft_philosopher_has_died(size_t index, t_main *main)
 	return (false);
 }
 
-void	*stop_monitor(void *arg)
+void	*ft_stop_monitor(void *arg)
 {
 	t_main		*main;
 	size_t		philo_index;
@@ -64,7 +64,6 @@ void	*stop_monitor(void *arg)
 				return (NULL);
 			if (ft_total_meals_are_complete(main))
 				return (NULL);
-			philo_index++;
 			philo_index++;
 		}
 		usleep(1000);

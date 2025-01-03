@@ -51,7 +51,7 @@ void	ft_init_threads(t_main *m)
 			ft_error("Failed to create philosopher thread.\n", m);
 		i++;
 	}
-	if (pthread_create(&m->monitor, NULL, &stop_monitor, m) != 0)
+	if (pthread_create(&m->monitor, NULL, &ft_stop_monitor, m) != 0)
 		ft_error("Failed to create monitor thread.\n", m);
 	return ;
 }

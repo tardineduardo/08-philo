@@ -65,8 +65,8 @@ bool	ft_eating(t_philos *philo, t_params *params)
 
 	if (ft_thread_must_stop(params))
 	{
-		pthread_mutex_unlock(philo->fork2);
 		pthread_mutex_unlock(philo->fork1);
+		pthread_mutex_unlock(philo->fork2);
 		return (false);
 	}
 	ft_get_time(&now, params->time_mutex);
@@ -115,6 +115,6 @@ bool	ft_thinking(t_philos *philo, t_params *params)
 	pthread_mutex_lock(params->print_mutex);
 	printf("%li %li is thinking\n", timedelta, philo->index + 1);
 	pthread_mutex_unlock(params->print_mutex);
-	usleep(10);
+	usleep(1000);
 	return (true);
 }

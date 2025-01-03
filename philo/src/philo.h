@@ -64,7 +64,6 @@ typedef struct s_main
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	meal_mutex;
 	pthread_mutex_t	time_mutex;
-	pthread_mutex_t	detached_mutex;
 	t_philos		*ph;
 	t_params		*params;
 }	t_main;
@@ -99,7 +98,7 @@ void	ft_error(char *message, t_main *main);
 void	ft_get_time(t_timeval *timeval, pthread_mutex_t *mutex);
 size_t	ft_t_delta_ms(t_timeval start, t_timeval end);
 size_t	ft_t_delta_us(t_timeval start, t_timeval end);
-void	*stop_monitor(void *arg);
+void	*ft_stop_monitor(void *arg);
 
 # define RESET   "\033[0m"
 # define RED     "\033[31m"
